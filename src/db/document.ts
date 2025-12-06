@@ -1,3 +1,6 @@
+/**
+ * This is an example of how database documents are defined within the system using inheritance and decorators.
+ */
 import { db } from '@piasastudios/core/server';
 import { FileOwner } from '@piasastudios/rogue/server/db';
 import { Coordinate } from './Coordinate';
@@ -6,17 +9,17 @@ import { Alert } from './Alert';
 import { CourseType } from '../../shared';
 
 @db.attr.document( 'Golf-Course' )
-@db.attr.skipRelations( 'createUser', 'updateUser' )
-export class Course extends FileOwner {
+@db.attr.skipRelations( 'createUser', 'updateUser' )    // << skips automatically loading these relationships which are defined on db.Base
+export class Course extends FileOwner {    // << inheritance is fully supported. this actually looks like Course < FileOwner < db.Base < Doc
     @db.attr.required.field.string()
     @db.attr.ui( { label: 'Name' } )
     public name: string;
 
-    @db.attr.field( 'Golf-CourseType', () => CourseType.Golf )
+    @db.attr.field( 'Golf-CourseType', () => CourseType.Golf )    // << this provides a default value of CourseType.Golf when no value is provided.
     @db.attr.ui( { label: 'Type' } )
     public type: CourseType;
 
-    @db.attr.required.field( 'Golf-Coordinate' )
+    @db.attr.required.field( 'Golf-Coordinate' )    // << Golf-Coordinate is not a document but a type within the schema system; i.e. it is simply lat/lng data and does not contain ID, audit info, etc
     @db.attr.ui( { label: 'Coordinate' } )
     public coordinate: Coordinate;
 
@@ -52,7 +55,7 @@ export class Course extends FileOwner {
     @db.attr.ui( { label: 'Postal Code' } )
     public postalCode: string;
 
-    @db.attr.array( 'Golf-Nine', 'new-array' )
+    @db.attr.array( 'Golf-Nine', 'new-array' )    // << this tells the system to initialize with an empty array when no value is provided.
     public nines: Nine[];
 
     @db.attr.array( 'Golf-Alert', 'new-array' )
