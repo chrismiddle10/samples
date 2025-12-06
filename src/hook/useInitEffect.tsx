@@ -1,5 +1,8 @@
 import React from 'react';
 
+/**
+ * {useInitEffect} is a simple but useful effect that does nothing on the initial execution of the effect.
+ */
 export function useInitEffect( effectFn: React.EffectCallback, deps: React.DependencyList ) {
     const initRef = React.useRef( false );
 

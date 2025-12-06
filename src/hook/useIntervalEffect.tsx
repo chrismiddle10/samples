@@ -1,30 +1,31 @@
 import React from 'react';
 
-let defaultInterval = 60_000; // one minute
-
-type AnyFn<T = any> = ( ...args: any[] ) => T;
+const DEFAULT_INTERVAL = 60_000; // one minute
 
 export interface IntervalEffectOptions {
-    handler: AnyFn;
+    handler: React.EffectCallback;
     interval?: number;
 }
 
-export function useIntervalEffect( options: IntervalEffectOptions | AnyFn, deps: React.DependencyList ) {
+/**
+ * {useIntervalEffect} is identical to {useBufferedEffect} in every way except for internally it calls {setInterval} rather than {setTimeout}.
+ */
+export function useIntervalEffect( options: IntervalEffectOptions | React.EffectCallback, deps: React.DependencyList ) {
     const intervalId = React.useRef<NodeJS.Timeout>();
 
     const asOptions = typeof options === 'function'
-        ? { handler: options as AnyFn }
+        ? { handler: options as React.EffectCallback }
         : options as IntervalEffectOptions;
 
     const {
         handler,
-        interval = defaultInterval,
+        interval = DEFAULT_INTERVAL,
     } = asOptions;
 
     React.useEffect( () => {
         clearInterval( intervalId.current );
 
-        intervalId.current = setInterval( () => handler(), interval );
+        intervalId.current = setInterval( handler, interval );
         return () => {
             clearInterval( intervalId.current );
         };

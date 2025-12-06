@@ -11,6 +11,9 @@ import { getDefaultIconPkg, getIconDefinition, hasIconPkg } from './Icon.const';
 
 // TODO: SUPPORT MORE TRANSFORMS: https://docs.fontawesome.com/web/style/power-transform/
 
+/**
+ * {Icon} is a cross-platform (web/native) component.
+ */
 export function Icon( props: IconProps ) {
     const {
         color,
